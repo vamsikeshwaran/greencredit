@@ -5,7 +5,7 @@ const cors = require('cors');
 
 app.use(cors());
 app.use(express.json());
-const mongoUrl = process.env.MONGODB_URI || "your-default-mongodb-url";
+const mongoUrl = process.env.MONGODB_URI || "mongodb+srv://vamsikeshwaran:admin@cluster0.mvz2ydo.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
 
 
 mongoose.connect(mongoUrl)
