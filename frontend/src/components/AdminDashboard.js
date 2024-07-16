@@ -94,7 +94,7 @@ const AdminDashboard = () => {
 
     const fetchProductuserDetails = async () => {
         try {
-            const response = await axios.get('http://localhost:5001/userproductdetails');
+            const response = await axios.get('https://greencredit-rbw7.vercel.app/userproductdetails');
             if (response.data.status === 'ok') {
                 setProducts(response.data.data);
             } else {
@@ -107,7 +107,7 @@ const AdminDashboard = () => {
 
     const fetchUserDetails = async (collectionName) => {
         try {
-            const response = await axios.get(`http://localhost:5001/userdetails/${collectionName}`);
+            const response = await axios.get(`https://greencredit-rbw7.vercel.app/userdetails/${collectionName}`);
             if (response.data.status === "ok") {
                 setSelectedUserDetails(response.data.data[0]);
             } else {
@@ -127,7 +127,7 @@ const AdminDashboard = () => {
         try {
             const date = new Date();
             const approvalDate = status === 'Approved' ? `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}` : null;
-            const response = await axios.put('http://localhost:5001/updateApplicationStatus', {
+            const response = await axios.put('https://greencredit-rbw7.vercel.app/updateApplicationStatus', {
                 objectId: objectId,
                 applicantName: applicantName,
                 applicationStatus: status,

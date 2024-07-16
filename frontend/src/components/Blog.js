@@ -58,7 +58,7 @@ const Blog = () => {
     }
     const fetchProductuserDetails = async () => {
         try {
-            const response = await axios.get('http://localhost:5001/blogproductdetails');
+            const response = await axios.get('https://greencredit-rbw7.vercel.app/blogproductdetails');
             if (response.data.status === 'ok') {
                 setblogdetails(response.data.data);
             } else {

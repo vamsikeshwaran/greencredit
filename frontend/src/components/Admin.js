@@ -65,7 +65,7 @@ const Admin = () => {
     const handleLogin = async (e) => {
         e.preventDefault();
         try {
-            const response = await axios.get('http://localhost:5001/adminlogin', {
+            const response = await axios.get('https://greencredit-rbw7.vercel.app/adminlogin', {
                 params: {
                     userId,
                     departmentCode,

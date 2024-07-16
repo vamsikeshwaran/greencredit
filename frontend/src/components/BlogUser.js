@@ -162,7 +162,7 @@ const BlogUserDashboard = () => {
 
     const fetchBlogDetails = async (collectionName) => {
         try {
-            const response = await axios.get(`http://localhost:5001/blogdetails/${collectionName}`);
+            const response = await axios.get(`https://greencredit-rbw7.vercel.app/blogdetails/${collectionName}`);
             if (response.data.status === "ok") {
                 console.log(response.data.data)
                 setblog(response.data.data)
@@ -187,7 +187,7 @@ const BlogUserDashboard = () => {
         };
 
         try {
-            const response = await axios.post('http://localhost:5001/addpost', userData, {
+            const response = await axios.post('https://greencredit-rbw7.vercel.app/addpost', userData, {
                 headers: {
                     'Content-Type': 'application/json',
                 },

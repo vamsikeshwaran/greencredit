@@ -67,7 +67,7 @@ const AdminSignUp = () => {
         e.preventDefault();
         if (password === confirmPassword) {
             try {
-                const response = await axios.post('http://localhost:5001/registeradmin', {
+                const response = await axios.post('https://greencredit-rbw7.vercel.app/registeradmin', {
                     userId,
                     departmentCode,
                     password,

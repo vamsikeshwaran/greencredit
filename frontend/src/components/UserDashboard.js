@@ -206,7 +206,7 @@ const UserDashboard = () => {
 
     const fetchUserDetails = async (collectionName) => {
         try {
-            const response = await axios.get(`http://localhost:5001/userdetails/${collectionName}`);
+            const response = await axios.get(`https://greencredit-rbw7.vercel.app/userdetails/${collectionName}`);
             if (response.data.status === "ok") {
                 console.log(response.data.data[0].authperson);
                 setUserDetails(response.data.data[0]);
@@ -219,7 +219,7 @@ const UserDashboard = () => {
     };
     const fetchProductDetails = async (collectionName) => {
         try {
-            const response = await axios.get(`http://localhost:5001/productdetails/${collectionName}`);
+            const response = await axios.get(`https://greencredit-rbw7.vercel.app/productdetails/${collectionName}`);
             if (response.data.status === "ok") {
                 setProducts(response.data.data);
                 console.log(response.data.data[0].remarks)
@@ -320,7 +320,7 @@ const UserDashboard = () => {
         };
 
         try {
-            const response = await axios.post('http://localhost:5001/createapplication', userData, {
+            const response = await axios.post('https://greencredit-rbw7.vercel.app/createapplication', userData, {
                 headers: {
                     'Content-Type': 'application/json',
                 },
