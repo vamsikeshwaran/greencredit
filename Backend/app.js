@@ -11,6 +11,10 @@ const mongoUrl = process.env.MONGODB_URI || "mongodb+srv://vamsikeshwaran:admin@
 mongoose.connect(mongoUrl)
     .then(() => {
         console.log("Database Connected");
+
+        app.listen(5001, () => {
+            console.log("Server Running on port 5001");
+        });
     })
     .catch((e) => {
         console.error("Error connecting to database:", e);
@@ -247,8 +251,4 @@ app.get('/blogproductdetails', async (req, res) => {
     } catch (error) {
         res.status(500).send({ status: "error", data: error.message });
     }
-});
-
-app.listen(5001, () => {
-    console.log("Server Running");
 });
