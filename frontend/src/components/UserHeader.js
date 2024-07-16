@@ -41,7 +41,7 @@ const UserHeader = ({ style, onPress }) => {
                 <Link to="/" style={logoStyle}>Green Credit</Link>
             </div>
             <div style={navLinksStyle}>
-                <Button text="Log Out" />
+                <Button text="Log Out" onClick={() => navigate('/')} />
             </div>
         </nav>
     );

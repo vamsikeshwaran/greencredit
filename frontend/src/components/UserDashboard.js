@@ -6,6 +6,8 @@ import { Pie } from 'react-chartjs-2';
 import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend, ArcElement } from 'chart.js';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
+import jsPDF from 'jspdf';
+import html2canvas from 'html2canvas';
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend, ArcElement);
 
 const pageStyle = {
@@ -71,7 +73,7 @@ const sidenavLinkStyle = {
 };
 
 const tableStyle = {
-    width: '80%',
+    width: '90%',
     margin: '20px auto',
     borderCollapse: 'collapse',
     textAlign: 'left',
@@ -113,7 +115,7 @@ const modalStyle = {
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
-    height: '470px'
+    height: '550px'
 };
 
 const inputStyle = {
@@ -150,17 +152,18 @@ const UserDashboard = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [products, setProducts] = useState([]);
     const [userDetails, setUserDetails] = useState({});
+    const { name } = useParams();
     const [formData, setFormData] = useState({
-        name: '',
+        name: name,
         date: new Date().toISOString().split('T')[0],
         project: '',
         amount: '',
+        address: '',
         status: '',
         approvalDate: '',
         authority: '',
         remarks: '',
     });
-    const { name } = useParams();
 
     const getSidenavLinkStyle = (section) => ({
         padding: '8px 8px 8px 16px',
@@ -178,6 +181,22 @@ const UserDashboard = () => {
             fetchProductDetails(collectionName);
         }
     }, [collectionName]);
+
+    const downloadPDF = () => {
+        const input = document.getElementById('#application');
+        html2canvas(input)
+            .then((canvas) => {
+                const imgData = canvas.toDataURL('image/png');
+                const pdf = new jsPDF('p', 'mm', 'a4');
+                const pdfWidth = pdf.internal.pageSize.getWidth();
+                const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
+                pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
+                pdf.save('report.pdf');
+            })
+            .catch((error) => {
+                console.error('Error generating PDF:', error);
+            });
+    };
 
     useEffect(() => {
         const script = document.createElement('script');
@@ -315,6 +334,7 @@ const UserDashboard = () => {
             dateOfFiling: formData.date,
             projectDescription: formData.project,
             creditAmount: formData.amount,
+            address: formData.address,
             applicationStatus: 'Pending'
 
         };
@@ -332,6 +352,7 @@ const UserDashboard = () => {
                     date: new Date().toISOString().split('T')[0],
                     project: '',
                     amount: '',
+                    address: '',
                     status: '',
                     approvalDate: '',
                     authority: '',
@@ -404,7 +425,7 @@ const UserDashboard = () => {
                     <div id='#application'>
                         <h1 style={{ marginTop: '100px', marginRight: '1000px' }}>Applications</h1>
                         <div style={{ marginTop: '-60px', marginLeft: '1000px' }}>
-                            <Button text="Download Report" />
+                            <Button text="Download Report" onClick={downloadPDF} />
                         </div>
                         <div style={{ ...lineStyle, marginBottom: '-50px', width: '1190px', marginLeft: '138px' }}></div>
                         <table style={tableStyle}>
@@ -415,6 +436,7 @@ const UserDashboard = () => {
                                     <th style={thStyle}>Date of Application</th>
                                     <th style={thStyle}>Project Description</th>
                                     <th style={thStyle}>Credit Amount</th>
+                                    <th style={thStyle}>Address</th>
                                     <th style={thStyle}>Application Status</th>
                                     <th style={thStyle}>Approval Date</th>
                                     <th style={thStyle}>Issuing Authority</th>
@@ -429,6 +451,7 @@ const UserDashboard = () => {
                                         <td style={tdStyle}>{product.dateOfFiling}</td>
                                         <td style={tdStyle}>{product.projectDescription}</td>
                                         <td style={tdStyle}>{product.creditAmount}</td>
+                                        <td style={tdStyle}>{product.address}</td>
                                         <td style={tdStyle}>{product.applicationStatus}</td>
                                         {product.approvalDate === null ? <td style={tdStyle}>-</td> : <td style={tdStyle}>{product.approvalDate}</td>}
                                         {product.issuingAuthority === null ? <td style={tdStyle}>-</td> : <td style={tdStyle}>{product.issuingAuthority}</td>}
@@ -450,7 +473,7 @@ const UserDashboard = () => {
                                 name="name"
                                 value={formData.name}
                                 onChange={handleInputChange}
-                                placeholder="Applicant Name"
+                                placeholder={formData.name}
                             />
                             <h4 style={{ color: '#0B6E4F', marginRight: '364px', marginBottom: '10px', marginTop: '5px' }}>Date of filing</h4>
                             <input
@@ -461,6 +484,15 @@ const UserDashboard = () => {
                                 onChange={handleInputChange}
                                 placeholder="Date of Application"
                                 max={formData.date}
+                            />
+                            <h4 style={{ color: '#0B6E4F', marginRight: '389px', marginBottom: '10px', marginTop: '5px' }}>Address</h4>
+                            <input
+                                style={inputStyle}
+                                type="text"
+                                name="address"
+                                value={formData.address}
+                                onChange={handleInputChange}
+                                placeholder="Address"
                             />
                             <h4 style={{ color: '#0B6E4F', marginRight: '310px', marginBottom: '10px', marginTop: '5px' }}>Project Description</h4>
                             <input
