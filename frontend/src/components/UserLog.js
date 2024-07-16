@@ -65,7 +65,7 @@ const UserLog = () => {
 
     const fetchUserDetails = async (collectionName) => {
         try {
-            const response = await axios.get(`https://greencredit-rbw7.vercel.app/userdetails/${collectionName}`);
+            const response = await axios.get(`http://localhost:5001/userdetails/${collectionName}`);
             return response.data;
         } catch (error) {
             console.error("Error fetching user details:", error);
