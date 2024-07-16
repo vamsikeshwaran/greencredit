@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import UserHeader from './UserHeader';
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
-import Button from './Button';
 
 const AdminDashboard = () => {
     const [products, setProducts] = useState([]);
@@ -13,6 +12,7 @@ const AdminDashboard = () => {
 
     const pageStyle = {
         background: 'linear-gradient(to right, #20AE8E, #22C984)',
+        height: '100vh',
         display: 'flex',
         flexDirection: 'column',
         color: 'white',
@@ -29,28 +29,15 @@ const AdminDashboard = () => {
         padding: '10px',
         borderBottom: '1px solid #ddd',
     };
-    const tdStylea = {
-        padding: '10px',
-        borderBottom: '1px solid #ddd',
-        width: '120px'
-    };
 
     const tableStyle = {
-        width: '90%',
+        width: '80%',
         margin: '20px auto',
         borderCollapse: 'collapse',
         textAlign: 'left',
         backgroundColor: 'white',
         color: 'black',
         marginTop: '100px',
-    };
-
-    const lineStyle = {
-        backgroundColor: 'grey',
-        height: '1px',
-        width: '94%',
-        marginTop: '22px',
-        marginLeft: '40px',
     };
 
     const buttonStyle = {
@@ -177,55 +164,37 @@ const AdminDashboard = () => {
     return (
         <div style={pageStyle}>
             <UserHeader style={{ background: '#0B6E4F' }} />
-            <div id='admin'>
-                <h1 style={{ marginTop: '100px', marginRight: '1100px' }}>Applications</h1>
-                <div style={{ marginTop: '-60px', marginLeft: '1000px' }}>
-                    <Button text="Download Report" />
-                </div>
-                <div style={{ ...lineStyle, marginBottom: '-50px', width: '1300px', marginLeft: '80px' }}></div>
-                <table style={tableStyle}>
-                    <thead>
-                        <tr>
-                            <th style={thStyle}>S.No</th>
-                            <th style={thStyle}>Applicant Name</th>
-                            <th style={thStyle}>Date of Application</th>
-                            <th style={thStyle}>Project Description</th>
-                            <th style={thStyle}>Credit Amount</th>
-                            <th style={{ ...thStyle }}>Address</th>
-                            <th style={thStyle}>Accept/Reject</th>
-                            <th style={thStyle}>Remarks</th>
+            <table style={tableStyle}>
+                <thead>
+                    <tr>
+                        <th style={thStyle}>S.No</th>
+                        <th style={thStyle}>Applicant Name</th>
+                        <th style={thStyle}>Date of Application</th>
+                        <th style={thStyle}>Project Description</th>
+                        <th style={thStyle}>Credit Amount</th>
+                        <th style={thStyle}>Accept/Reject</th>
+                        <th style={thStyle}>Remarks</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {products.map((product, index) => (
+                        <tr key={product._id}>
+                            <td style={tdStyle}>{index + 1}</td>
+                            <td style={{ ...tdStyle, cursor: 'pointer', color: '#20AE8E' }} onClick={() => handleApplicantClick(product.applicantName)}>{product.applicantName}</td>
+                            <td style={tdStyle}>{product.dateOfFiling}</td>
+                            <td style={tdStyle}>{product.projectDescription}</td>
+                            <td style={tdStyle}>{product.creditAmount}</td>
+                            <td style={tdStyle}>
+                                <button onClick={() => handleAccept(product._id, product.applicantName)} style={{ ...buttonStyle, fontWeight: 'bold', color: 'white', backgroundColor: '#0B6E4F' }}>Accept</button>
+                                <button onClick={() => handleReject(product._id, product.applicantName)} style={{ ...buttonStyle, backgroundColor: 'red', color: 'white', fontWeight: 'bold' }}>Reject</button>
+                            </td>
+                            <td style={tdStyle}>
+                                <button onClick={() => setSelectedProduct(product)} style={{ ...buttonStyle }}>Add Remarks</button>
+                            </td>
                         </tr>
-                    </thead>
-                    <tbody>
-                        {products.map((product, index) => (
-                            <tr key={product._id}>
-                                <td style={tdStyle}>{index + 1}</td>
-                                <td style={{ ...tdStyle, cursor: 'pointer', color: '#20AE8E' }} onClick={() => handleApplicantClick(product.applicantName)}>{product.applicantName}</td>
-                                <td style={tdStyle}>{product.dateOfFiling}</td>
-                                <td style={tdStyle}>{product.projectDescription}</td>
-                                <td style={tdStyle}>{product.creditAmount}</td>
-                                <td style={tdStylea}>{product.address}</td>
-                                <td style={tdStyle}>
-                                    {product.applicationStatus === 'Approved' && <p>Approved</p>}
-                                    {product.applicationStatus === 'Rejected' && <p>Rejected</p>}
-                                    {product.applicationStatus === 'Pending' &&
-                                        <>
-                                            <button onClick={() => handleAccept(product._id, product.applicantName)} style={{ ...buttonStyle, fontWeight: 'bold', color: 'white', backgroundColor: '#0B6E4F' }}>Accept</button>
-                                            <button onClick={() => handleReject(product._id, product.applicantName)} style={{ ...buttonStyle, backgroundColor: 'red', color: 'white', fontWeight: 'bold' }}>Reject</button>
-                                        </>
-                                    }
-                                </td>
-                                {product.remarks === null ? <td style={tdStyle}>
-                                    <button onClick={() => setSelectedProduct(product)} style={{ ...buttonStyle }}>Add Remarks</button>
-                                </td> :
-                                    <td style={tdStyle}>
-                                        <p>{product.remarks}</p></td>}
-
-                            </tr>
-                        ))}
-                    </tbody>
-                </table>
-            </div>
+                    ))}
+                </tbody>
+            </table>
             {selectedProduct && (
                 <>
                     <div style={overlayStyle} onClick={closeModal}></div>

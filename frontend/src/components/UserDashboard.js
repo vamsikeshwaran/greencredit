@@ -71,7 +71,7 @@ const sidenavLinkStyle = {
 };
 
 const tableStyle = {
-    width: '90%',
+    width: '80%',
     margin: '20px auto',
     borderCollapse: 'collapse',
     textAlign: 'left',
@@ -113,7 +113,7 @@ const modalStyle = {
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
-    height: '550px'
+    height: '470px'
 };
 
 const inputStyle = {
@@ -150,18 +150,17 @@ const UserDashboard = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [products, setProducts] = useState([]);
     const [userDetails, setUserDetails] = useState({});
-    const { name } = useParams();
     const [formData, setFormData] = useState({
-        name: name,
+        name: '',
         date: new Date().toISOString().split('T')[0],
         project: '',
         amount: '',
-        address: '',
         status: '',
         approvalDate: '',
         authority: '',
         remarks: '',
     });
+    const { name } = useParams();
 
     const getSidenavLinkStyle = (section) => ({
         padding: '8px 8px 8px 16px',
@@ -316,7 +315,6 @@ const UserDashboard = () => {
             dateOfFiling: formData.date,
             projectDescription: formData.project,
             creditAmount: formData.amount,
-            address: formData.address,
             applicationStatus: 'Pending'
 
         };
@@ -334,7 +332,6 @@ const UserDashboard = () => {
                     date: new Date().toISOString().split('T')[0],
                     project: '',
                     amount: '',
-                    address: '',
                     status: '',
                     approvalDate: '',
                     authority: '',
@@ -418,7 +415,6 @@ const UserDashboard = () => {
                                     <th style={thStyle}>Date of Application</th>
                                     <th style={thStyle}>Project Description</th>
                                     <th style={thStyle}>Credit Amount</th>
-                                    <th style={thStyle}>Address</th>
                                     <th style={thStyle}>Application Status</th>
                                     <th style={thStyle}>Approval Date</th>
                                     <th style={thStyle}>Issuing Authority</th>
@@ -433,7 +429,6 @@ const UserDashboard = () => {
                                         <td style={tdStyle}>{product.dateOfFiling}</td>
                                         <td style={tdStyle}>{product.projectDescription}</td>
                                         <td style={tdStyle}>{product.creditAmount}</td>
-                                        <td style={tdStyle}>{product.address}</td>
                                         <td style={tdStyle}>{product.applicationStatus}</td>
                                         {product.approvalDate === null ? <td style={tdStyle}>-</td> : <td style={tdStyle}>{product.approvalDate}</td>}
                                         {product.issuingAuthority === null ? <td style={tdStyle}>-</td> : <td style={tdStyle}>{product.issuingAuthority}</td>}
@@ -455,7 +450,7 @@ const UserDashboard = () => {
                                 name="name"
                                 value={formData.name}
                                 onChange={handleInputChange}
-                                placeholder={formData.name}
+                                placeholder="Applicant Name"
                             />
                             <h4 style={{ color: '#0B6E4F', marginRight: '364px', marginBottom: '10px', marginTop: '5px' }}>Date of filing</h4>
                             <input
@@ -466,15 +461,6 @@ const UserDashboard = () => {
                                 onChange={handleInputChange}
                                 placeholder="Date of Application"
                                 max={formData.date}
-                            />
-                            <h4 style={{ color: '#0B6E4F', marginRight: '389px', marginBottom: '10px', marginTop: '5px' }}>Address</h4>
-                            <input
-                                style={inputStyle}
-                                type="text"
-                                name="address"
-                                value={formData.address}
-                                onChange={handleInputChange}
-                                placeholder="Address"
                             />
                             <h4 style={{ color: '#0B6E4F', marginRight: '310px', marginBottom: '10px', marginTop: '5px' }}>Project Description</h4>
                             <input
