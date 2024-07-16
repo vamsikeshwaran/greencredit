@@ -84,7 +84,6 @@ const UserSign = () => {
     const [agreeTerms, setAgreeTerms] = useState(false);
     const [selectedFile, setSelectedFile] = useState(null);
     const [imageurl, setimageurl] = useState("");
-    const [errors, setErrors] = useState({});
 
     const handleFileChange = async (event) => {
         const file = event.target.files[0];
@@ -110,56 +109,8 @@ const UserSign = () => {
     const handleCheckboxChange = () => {
         setAgreeTerms(!agreeTerms);
     };
-    const validateStep = () => {
-        const newErrors = {};
-
-        const connumRegex = /^\d{10}$/;
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        const aadharRegex = /^\d{12}$/;
-        const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
-
-        if (selectedCircle === 1 && !userType) {
-            newErrors.userType = "User type is required";
-        }
-        if (selectedCircle === 2) {
-            if (!entityName) newErrors.entityName = "Entity name is required";
-            if (!addressName) newErrors.addressName = "Address is required";
-            if (!password) {
-                newErrors.password = "Password is required";
-            } else if (!passwordRegex.test(password)) {
-                newErrors.password = "Password must be at least 8 characters long and include one uppercase letter, one lowercase letter, one digit, and one special character";
-            }
-        }
-        if (selectedCircle === 3) {
-            if (!entitytype) newErrors.entityType = "Entity type is required";
-            if (!aadhar) {
-                newErrors.aadhar = "Identity proof number is required";
-            } else if (!aadharRegex.test(aadhar)) {
-                newErrors.aadhar = "Aadhar number must be exactly 12 digits";
-            }
-        }
-        if (selectedCircle === 4) {
-            if (!authperson) newErrors.authPerson = "Authorized person name is required";
-            if (!desig) newErrors.desig = "Designation is required";
-            if (!connum) {
-                newErrors.connum = "Contact number is required";
-            } else if (!connumRegex.test(connum)) {
-                newErrors.connum = "Contact number must be exactly 10 digits";
-            }
-            if (!email) {
-                newErrors.email = "Email is required";
-            } else if (!emailRegex.test(email)) {
-                newErrors.email = "Email format is invalid";
-            }
-        }
-
-        setErrors(newErrors);
-        return Object.keys(newErrors).length === 0;
-    };
     const handleNextClick = () => {
-        if (validateStep()) {
-            setSelectedCircle((prev) => prev + 1);
-        }
+        setSelectedCircle((prev) => (prev + 1));
     };
     const handleBackClick = () => {
         setSelectedCircle((prev) => (prev - 1));
@@ -167,37 +118,36 @@ const UserSign = () => {
     };
     const handleFinishClick = async (event) => {
         event.preventDefault();
-        if (validateStep()) {
-            const userData = {
-                identifier: "User",
-                userType: userType,
-                entityName: entityName,
-                addressName: addressName,
-                password: password,
-                entitytype: entitytype,
-                aadhar: aadhar,
-                authperson: authperson,
-                desig: desig,
-                connum: connum,
-                email: email,
-                image: imageurl,
-                agreeTerms: agreeTerms
-            };
 
-            try {
-                const response = await axios.post('https://greencredit-rbw7.vercel.app/register', userData, {
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                });
-                if (response.data.status === "ok") {
-                    navigate(`/userdashboard/${authperson}`);
-                } else {
-                    console.log(response.data);
-                }
-            } catch (error) {
-                console.error('There was an error registering the user!', error);
+        const userData = {
+            identifier: "User",
+            userType: userType,
+            entityName: entityName,
+            addressName: addressName,
+            password: password,
+            entitytype: entitytype,
+            aadhar: aadhar,
+            authperson: authperson,
+            desig: desig,
+            connum: connum,
+            email: email,
+            image: imageurl,
+            agreeTerms: agreeTerms
+        };
+
+        try {
+            const response = await axios.post('https://greencredit-rbw7.vercel.app/register', userData, {
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
+            if (response.data.status === "ok") {
+                navigate(`/userdashboard/${authperson}`);
+            } else {
+                console.log(response.data);
             }
+        } catch (error) {
+            console.error('There was an error registering the user!', error);
         }
     };
 
@@ -243,7 +193,6 @@ const UserSign = () => {
                             <option value="Entity/Green Credit Applicant">Entity/Green Credit Applicant</option>
                             <option value="Implementing Agency">Implementing Agency</option>
                         </select>
-                        {errors.userType && <p style={{ color: 'red', marginLeft: '20px' }}>{errors.userType}</p>}
                     </div>
                 )}
                 {selectedCircle === 2 && (
@@ -253,24 +202,22 @@ const UserSign = () => {
                         </div>
                         <div style={{ display: 'flex', flexDirection: 'row', gap: '140px' }}>
                             <div>
-                                <p style={{ color: 'black', marginLeft: '20px', fontSize: '18px', marginTop: '20px' }}>Entity Name (Company Name)</p>
+                                <p style={{ color: 'black', marginLeft: '20px', fontSize: '18px', marginTop: '40px' }}>Entity Name (Company Name)</p>
                                 <input
                                     type="text"
                                     style={{ marginLeft: '20px', marginTop: '5px', padding: '10px', fontSize: '16px', width: '350px' }}
                                     value={entityName}
                                     onChange={(e) => setEntityName(e.target.value)}
                                 />
-                                {errors.entityName && <p style={{ color: 'red', marginLeft: '20px' }}>{errors.entityName}</p>}
                             </div>
                             <div>
-                                <p style={{ color: 'black', marginLeft: '20px', fontSize: '18px', marginTop: '20px' }}>Address (Company Address)</p>
+                                <p style={{ color: 'black', marginLeft: '20px', fontSize: '18px', marginTop: '40px' }}>Address (Company Address)</p>
                                 <input
                                     type="text"
                                     style={{ marginLeft: '20px', marginTop: '5px', padding: '10px', fontSize: '16px', width: '350px' }}
                                     value={addressName}
                                     onChange={(e) => setaddressName(e.target.value)}
                                 />
-                                {errors.addressName && <p style={{ color: 'red', marginLeft: '20px' }}>{errors.addressName}</p>}
                             </div>
                         </div>
                         <p style={{ color: 'black', marginLeft: '20px', fontSize: '18px', marginTop: '40px' }}>Password</p>
@@ -280,7 +227,6 @@ const UserSign = () => {
                             value={password}
                             onChange={(e) => setpassword(e.target.value)}
                         />
-                        {errors.password && <p style={{ color: 'red', marginLeft: '20px' }}>{errors.password}</p>}
                     </div>
                 )}
                 {selectedCircle === 3 && (
@@ -290,7 +236,7 @@ const UserSign = () => {
                         </div>
                         <div style={{ display: 'flex', flexDirection: 'row', gap: '140px' }}>
                             <div>
-                                <p style={{ color: 'black', marginLeft: '20px', fontSize: '18px', marginTop: '20px' }}>Entity Type</p>
+                                <p style={{ color: 'black', marginLeft: '20px', fontSize: '18px', marginTop: '40px' }}>Entity Type</p>
                                 <select
                                     style={{ marginLeft: '20px', marginTop: '10px', padding: '8px', fontSize: '16px', width: '350px' }}
                                     value={entitytype}
@@ -305,20 +251,18 @@ const UserSign = () => {
                                     <option value="Individuals">Individuals</option>
                                     <option value="Registered Group of Individuals">Registered Group of Individuals</option>
                                 </select>
-                                {errors.entityType && <p style={{ color: 'red', marginLeft: '20px' }}>{errors.entityType}</p>}
                             </div>
                             <div>
-                                <p style={{ color: 'black', marginLeft: '20px', fontSize: '18px', marginTop: '20px' }}>Identity Proof Number(Aadhar/PAN/GSTIN Number)</p>
+                                <p style={{ color: 'black', marginLeft: '20px', fontSize: '18px', marginTop: '40px' }}>Identity Proof Number(Aadhar/PAN/GSTIN Number)</p>
                                 <input
                                     type="text"
                                     style={{ marginLeft: '20px', marginTop: '5px', padding: '10px', fontSize: '16px', width: '350px' }}
                                     value={aadhar}
                                     onChange={(e) => setaadhar(e.target.value)}
                                 />
-                                {errors.aadhar && <p style={{ color: 'red', marginLeft: '20px' }}>{errors.aadhar}</p>}
                             </div>
                         </div>
-                        <p style={{ color: 'black', marginLeft: '20px', fontSize: '18px', marginTop: '8px' }}>Upload Aadhar/TAN/PAN/CIN/GSTIN Image</p>
+                        <p style={{ color: 'black', marginLeft: '20px', fontSize: '18px', marginTop: '40px' }}>Upload Aadhar/TAN/PAN/CIN/GSTIN Image</p>
                         <div style={{ backgroundColor: '#f6f6f6', border: '1px dotted #ccc', padding: '20px', margin: 'auto', width: '920px', textAlign: 'center', height: '60px' }}>
                             {preview ? (
                                 <>
@@ -346,49 +290,45 @@ const UserSign = () => {
                         </div>
                         <div style={{ display: 'flex', flexDirection: 'row', gap: '140px' }}>
                             <div>
-                                <p style={{ color: 'black', marginLeft: '20px', fontSize: '18px', marginTop: '10px' }}>Name of Authorized Person</p>
+                                <p style={{ color: 'black', marginLeft: '20px', fontSize: '18px', marginTop: '40px' }}>Name of Authorized Person</p>
                                 <input
                                     type="text"
                                     style={{ marginLeft: '20px', marginTop: '5px', padding: '10px', fontSize: '16px', width: '350px' }}
                                     value={authperson}
                                     onChange={(e) => setauthperson(e.target.value)}
                                 />
-                                {errors.authPerson && <p style={{ color: 'red', marginLeft: '20px' }}>{errors.authPerson}</p>}
                             </div>
                             <div>
-                                <p style={{ color: 'black', marginLeft: '20px', fontSize: '18px', marginTop: '10px' }}>Designation</p>
+                                <p style={{ color: 'black', marginLeft: '20px', fontSize: '18px', marginTop: '40px' }}>Designation</p>
                                 <input
                                     type="text"
                                     style={{ marginLeft: '20px', marginTop: '5px', padding: '10px', fontSize: '16px', width: '350px' }}
                                     value={desig}
                                     onChange={(e) => setdesig(e.target.value)}
                                 />
-                                {errors.desig && <p style={{ color: 'red', marginLeft: '20px' }}>{errors.desig}</p>}
                             </div>
                         </div>
                         <div style={{ display: 'flex', flexDirection: 'row', gap: '140px' }}>
                             <div>
-                                <p style={{ color: 'black', marginLeft: '20px', fontSize: '18px', marginTop: errors.connum ? '-5px' : '40px' }}>Contact Number</p>
+                                <p style={{ color: 'black', marginLeft: '20px', fontSize: '18px', marginTop: '20px' }}>Contact Number</p>
                                 <input
                                     type="text"
                                     style={{ marginLeft: '20px', marginTop: '5px', padding: '10px', fontSize: '16px', width: '350px' }}
                                     value={connum}
                                     onChange={(e) => setconnum(e.target.value)}
                                 />
-                                {errors.connum && <p style={{ color: 'red', marginLeft: '20px' }}>{errors.connum}</p>}
                             </div>
                             <div>
-                                <p style={{ color: 'black', marginLeft: '20px', fontSize: '18px', marginTop: errors.email ? '-5px' : '40px' }}>Email</p>
+                                <p style={{ color: 'black', marginLeft: '20px', fontSize: '18px', marginTop: '20px' }}>Email</p>
                                 <input
                                     type="email"
                                     style={{ marginLeft: '20px', marginTop: '5px', padding: '10px', fontSize: '16px', width: '350px' }}
                                     value={email}
                                     onChange={(e) => setemail(e.target.value)}
                                 />
-                                {errors.email && <p style={{ color: 'red', marginLeft: '20px' }}>{errors.email}</p>}
                             </div>
                         </div>
-                        <label style={{ display: 'block', marginBottom: '10px', marginTop: errors.email ? '-10px' : '40px', marginLeft: '20px', color: 'black', fontSize: '15px' }}>
+                        <label style={{ display: 'block', marginBottom: '10px', marginTop: '30px', marginLeft: '20px', color: 'black', fontSize: '15px' }}>
                             <input type="checkbox" checked={agreeTerms} onChange={handleCheckboxChange} style={{ marginRight: '5px' }} />
                             I hereby declare that the information provided above is true. I understand that false information may lead to the rejection of registration.
                         </label>
@@ -439,5 +379,4 @@ const UserSign = () => {
 };
 
 export default UserSign;
-
 
