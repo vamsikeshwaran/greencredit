@@ -3,8 +3,6 @@ import UserHeader from './UserHeader';
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
 import Button from './Button';
-import jsPDF from 'jspdf';
-import html2canvas from 'html2canvas';
 
 const AdminDashboard = () => {
     const [products, setProducts] = useState([]);
@@ -120,23 +118,6 @@ const AdminDashboard = () => {
         }
     };
 
-    const downloadPDF = () => {
-        const input = document.getElementById('admin');
-        html2canvas(input)
-            .then((canvas) => {
-                const imgData = canvas.toDataURL('image/png');
-                const pdf = new jsPDF('p', 'mm', 'a4');
-                const pdfWidth = pdf.internal.pageSize.getWidth();
-                const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
-                pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
-                pdf.save('report.pdf');
-            })
-            .catch((error) => {
-                console.error('Error generating PDF:', error);
-            });
-    };
-
-
     const fetchUserDetails = async (collectionName) => {
         try {
             const response = await axios.get(`https://greencredit-rbw7.vercel.app/userdetails/${collectionName}`);
@@ -199,7 +180,7 @@ const AdminDashboard = () => {
             <div id='admin'>
                 <h1 style={{ marginTop: '100px', marginRight: '1100px' }}>Applications</h1>
                 <div style={{ marginTop: '-60px', marginLeft: '1000px' }}>
-                    <Button text="Download Report" onClick={downloadPDF} />
+                    <Button text="Download Report" />
                 </div>
                 <div style={{ ...lineStyle, marginBottom: '-50px', width: '1300px', marginLeft: '80px' }}></div>
                 <table style={tableStyle}>

@@ -6,8 +6,6 @@ import { Pie } from 'react-chartjs-2';
 import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend, ArcElement } from 'chart.js';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
-import jsPDF from 'jspdf';
-import html2canvas from 'html2canvas';
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend, ArcElement);
 
 const pageStyle = {
@@ -181,22 +179,6 @@ const UserDashboard = () => {
             fetchProductDetails(collectionName);
         }
     }, [collectionName]);
-
-    const downloadPDF = () => {
-        const input = document.getElementById('#application');
-        html2canvas(input)
-            .then((canvas) => {
-                const imgData = canvas.toDataURL('image/png');
-                const pdf = new jsPDF('p', 'mm', 'a4');
-                const pdfWidth = pdf.internal.pageSize.getWidth();
-                const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
-                pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
-                pdf.save('report.pdf');
-            })
-            .catch((error) => {
-                console.error('Error generating PDF:', error);
-            });
-    };
 
     useEffect(() => {
         const script = document.createElement('script');
@@ -425,7 +407,7 @@ const UserDashboard = () => {
                     <div id='#application'>
                         <h1 style={{ marginTop: '100px', marginRight: '1000px' }}>Applications</h1>
                         <div style={{ marginTop: '-60px', marginLeft: '1000px' }}>
-                            <Button text="Download Report" onClick={downloadPDF} />
+                            <Button text="Download Report" />
                         </div>
                         <div style={{ ...lineStyle, marginBottom: '-50px', width: '1190px', marginLeft: '138px' }}></div>
                         <table style={tableStyle}>
